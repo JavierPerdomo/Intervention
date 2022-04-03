@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VerifierCaracteresValidator } from '../shared/longueur-minimum/longueur-minimum.component';
 import { ITypeProbleme } from './probleme';
 import { ProblemeService } from './probleme.service';
+import { emailMatcherValidator } from '../shared/email-matcher/email-matcher.component';
 
 @Component({
   selector: 'Inter-probleme',
@@ -37,7 +38,8 @@ export class ProblemeComponent implements OnInit {
     const courriel = this.problemeForm.get('courrielGroup.courriel');
     const courrielConfirmation = this.problemeForm.get('courrielGroup.courrielConfirmation');
     const telephone = this.problemeForm.get('telephone');
-    
+    const courrielGroupControl = this.problemeForm.get('courrielGroup');
+
     courriel.clearValidators();
     courriel.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invaldides
     courriel.disable();  
@@ -50,24 +52,39 @@ export class ProblemeComponent implements OnInit {
     telephone.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invaldides
     telephone.disable();  
 
-    if (typesNotification=='courriel'){
-      courriel.setValidators([Validators.required]);   
-      courriel.enable();
-      courriel.updateValueAndValidity();
-      courrielConfirmation.enable();
-
-    }else{
-
-    }
-      if (typesNotification=='telephone'){
+    if (typesNotification === 'parCourriel') {   
+      courriel.setValidators([Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);      
+      courriel.enable();  
+      courrielConfirmation.setValidators([Validators.required]);              
+      courrielConfirmation.enable();  
+      // Si le validateur est dans un autre fichier l'écire sous la forme suivante : 
+      // ...Validators.compose([classeDuValidateur.NomDeLaMethode()])])
+      courrielGroupControl.setValidators([Validators.compose([emailMatcherValidator.courrielDifferents()])]);                       
+}
+    if(typesNotification === 'parTelephone' || typesNotification === 'parMessage' )
+    {
+      telephone.setValidators([Validators.required,Validators.pattern('[0-9]+')]);  
       telephone.setValidators([Validators.required]);   
-      telephone.enable();
-    }else{
-      
+      telephone.enable();               
     }
-    courrielConfirmation.updateValueAndValidity();
+    else if(typesNotification === 'inconnu'){
 
-    telephone.updateValueAndValidity();
+      telephone.setValidators([Validators.required,Validators.pattern('[0-9]+')]);  
+      telephone.setValidators([Validators.required]);   
+      telephone.disable(); 
+
+
+      courriel.setValidators([Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);      
+      courriel.disable();  
+      courrielConfirmation.setValidators([Validators.required]);              
+      courrielConfirmation.disable();  
+      courrielGroupControl.setValidators([Validators.compose([emailMatcherValidator.courrielDifferents()])]);     
+    }
+    
+  courriel.updateValueAndValidity();   
+  courrielConfirmation.updateValueAndValidity();     
+  
+  telephone.updateValueAndValidity();
 
   }
   save(): void {
