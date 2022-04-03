@@ -1,7 +1,9 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProblemeComponent } from './probleme.component';
+import { ProblemeService } from './probleme.service';
 
 describe('ProblemeComponent', () => {
   let component: ProblemeComponent;
@@ -9,8 +11,9 @@ describe('ProblemeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [ ProblemeComponent ]
+      imports: [ReactiveFormsModule,HttpClientModule], 
+      declarations: [ ProblemeComponent ],
+      providers:[ProblemeService]
     })
     .compileComponents();
   });
@@ -21,48 +24,69 @@ describe('ProblemeComponent', () => {
     fixture.detectChanges();
   });
 
-   it('should create', () => {
-     expect(component).toBeTruthy();
-   });
+  // it("#1 | Zone PRÉNOM invalide avec 2 caractèress", () =>{
+  //   let zone = component.problemeForm.controls['prenom'];
+  //   zone.setValue("a".repeat(2));
+  //   let errors = zone.errors || {};
+  //   expect(errors['minlength']).toBeFalsy();
+  //   });
+  //   it("#2 | Zone PRÉNOM invalide avec 3 caractères", () =>{
+  //     let zone = component.problemeForm.controls['prenom'];
+  //     zone.setValue("a".repeat(3));
+  //     let errors = zone.errors || {};
+  //     expect(errors['minlength']).toBeFalsy();
+  //     });
+  //     it("#3 | Zone PRÉNOM invalide avec 200 caractères", () =>{
+  //       let zone = component.problemeForm.controls['prenom'];
+  //       zone.setValue("a".repeat(200));
+  //       let errors = zone.errors || {};
+  //       expect(errors['minlength']).toBeFalsy();
+  //       });
+  //       it("#4 | Zone PRÉNOM invalide avec aucun caractères", () =>{
+  //         let zone = component.problemeForm.controls['prenom'];
+  //         zone.setValue("a".repeat(0));
+  //         let errors = zone.errors || {};
+  //         expect(errors['required']).toBeTruthy();
+  //         });
+  //         it("#5 | Zone PRÉNOM invalide avec 10 espaces", () =>{
+  //           let zone = component.problemeForm.controls['prenom'];
+  //           zone.setValue(" ".repeat(10));
+  //           let errors = zone.errors || {};
+  //           expect(errors['minlength']).toBeFalsy();
+  //           });
+  //           it("#6 | Zone PRÉNOM invalide avec 2 espaces et 1 caractères", () =>{
+  //             let zone = component.problemeForm.controls['prenom'];
+  //             zone.setValue(" ".repeat(3));
+  //             let errors = zone.errors || {};
+  //             expect(errors['minlength']).toBeFalsy();
+  //             });
 
-   it("#1 | Zone PRÉNOM invalide avec 2 caractères", () =>{
-    let zone = component.problemeForm.controls['prenom'];
-    zone.setValue("a".repeat(2));
-    let errors = zone.errors || {};
-    expect(errors['minlength']).toBeTruthy();
-    });
-    
-    it("#2 | Zone PRÉNOM valide avec 3 caractèress", () =>{
-      let zone = component.problemeForm.controls['prenom'];
-      zone.setValue("a".repeat(3));
-      let errors = zone.errors || {};
-      expect(zone.valid).toBeTruthy();
-      });
 
-    it("#3 | Zone PRÉNOM valide avec 200 caractères", () =>{
-      let zone = component.problemeForm.controls['prenom'];
-      zone.setValue("a".repeat(200));
-      let errors = zone.errors || {};
-      expect(zone.valid).toBeTruthy();
-      }); 
+              // TEST #15
+            it('#15 | Zone TELEPHONE est désactivée quand ne pas me notifier', () => {
+              component.appliquerNotifications('typeNotification');
+              let zone = component.problemeForm.get('telephone');
+              expect(zone.status).toEqual('DISABLED');
+            });
 
-    it("#4 | Zone PRÉNOM invalide avec aucune valeur", () =>{
-      let zone = component.problemeForm.controls['prenom'];
-      let errors = zone.errors || {};
-      expect(errors['required']).toBeTruthy();
-      });
+            // TEST #16
+            it('#16 | Zone TELEPHONE est vide quand ne pas me notifier', () => {
+              component.appliquerNotifications('typeNotification');
+              let zone = component.problemeForm.get('telephone');
+              expect(zone.value).toBeNull();
 
-    it("#5 | Zone PRÉNOM valide avec 10 espaces", () =>{
-      let zone = component.problemeForm.controls['prenom'];
-      zone.setValue(" ".repeat(10));
-      let errors = zone.errors || {};
-      expect(zone.valid).toBeTruthy();
-      });
-
-    it("#6 | Zone PRÉNOM valide avec 2 espaces et 1 caractère", () =>{
-      let zone = component.problemeForm.controls['prenom'];
-      zone.setValue(" ".repeat(2) + "a".repeat(1));
-      let errors = zone.errors || {};
-      expect(zone.valid).toBeTruthy();
-      });
+            });
+            // TEST #17
+            it('#17 | Zone ADRESSE COURRIEL est désactivée quand ne pas me notifier', () => {
+              component.appliquerNotifications('typeNotification');
+              let zone = component.problemeForm.get('courrielGroup.courriel');
+              expect(zone.status).toEqual('DISABLED');
+            });
+            // TEST #18
+            it('#18 | Zone CONFIRMER COURRIEL est désactivée quand ne pas me notifier', () => {
+              component.appliquerNotifications('typeNotification');
+              let zone = component.problemeForm.get('courrielGroup.courrielConfirmation');
+              expect(zone.status).toEqual('DISABLED');
+            });
+  
 });
