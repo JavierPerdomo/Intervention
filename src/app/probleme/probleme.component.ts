@@ -36,9 +36,10 @@ export class ProblemeComponent implements OnInit {
   }
   appliquerNotifications(typesNotification: string): void{
     const courriel = this.problemeForm.get('courrielGroup.courriel');
-    const courrielConfirmation = this.problemeForm.get('courrielGroup.courrielConfirmation');
+    const courrielConfirmation = this.problemeForm.get('courrielGroup.courrielConfirmation');   
+    const courrielGroupControl = this.problemeForm.get('courrielGroup');      
+
     const telephone = this.problemeForm.get('telephone');
-    const courrielGroupControl = this.problemeForm.get('courrielGroup');
 
     courriel.clearValidators();
     courriel.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invaldides
@@ -64,7 +65,7 @@ export class ProblemeComponent implements OnInit {
     if(typesNotification === 'parTelephone' || typesNotification === 'parMessage' )
     {
       telephone.setValidators([Validators.required,Validators.pattern('[0-9]+')]);  
-      telephone.setValidators([Validators.required]);   
+      telephone.setValidators([Validators.required,Validators.minLength(10),Validators.maxLength(10)]);   
       telephone.enable();               
     }
     else if(typesNotification === 'inconnu'){
