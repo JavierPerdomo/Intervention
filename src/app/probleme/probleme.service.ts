@@ -7,6 +7,9 @@ import { ITypeProbleme } from './probleme';
   providedIn: 'root'
 })
 export class ProblemeService {
+  obtenirTypesProbleme() {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = 'api/typesprobleme';
   constructor(private _http: HttpClient) { }
 

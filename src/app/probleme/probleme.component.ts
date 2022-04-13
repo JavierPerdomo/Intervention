@@ -27,11 +27,19 @@ export class ProblemeComponent implements OnInit {
         courrielConfirmation: [{value: '', disabled: true}],
       }),
       telephone: [{value: '', disabled: true}],
+      notification: ['pasnotification'],
+      descriptionProbleme:["",[Validators.required, Validators.minLength(5)]],
+      noUnite:"",
+      dateProbleme:{value:Date(),disabled:true}
+
   });
-      this.problemes.obtenirProbleme()
+  this.problemeForm.get('notification').valueChanges
+      .subscribe(value => this.appliquerNotifications(value));
+    this.problemes.obtenirProbleme()
       .subscribe(cat => this.categoriesProbleme = cat,
-              error => this.errorMessage = <any>error);  
-              
+        error => this.errorMessage = <any>error);
+             
+      
     
   }
   appliquerNotifications(typesNotification: string): void{
@@ -53,19 +61,16 @@ export class ProblemeComponent implements OnInit {
     telephone.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invaldides
     telephone.disable();  
 
-    if (typesNotification === 'parCourriel') {   
+    if (typesNotification === 'courriel') {   
       courriel.setValidators([Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);      
       courriel.enable();  
       courrielConfirmation.setValidators([Validators.required]);              
       courrielConfirmation.enable();  
-      // Si le validateur est dans un autre fichier l'écire sous la forme suivante : 
-      // ...Validators.compose([classeDuValidateur.NomDeLaMethode()])])
       courrielGroupControl.setValidators([Validators.compose([emailMatcherValidator.courrielDifferents()])]);                       
 }
-    if(typesNotification === 'parTelephone' || typesNotification === 'parMessage' )
+    if(typesNotification === 'telephone' || typesNotification === 'messageTexte' )
     {
-      telephone.setValidators([Validators.required,Validators.pattern('[0-9]+')]);  
-      telephone.setValidators([Validators.required,Validators.minLength(10),Validators.maxLength(10)]);   
+      telephone.setValidators([Validators.required,Validators.pattern('[0-9]+'),Validators.minLength(10),Validators.maxLength(10)]); 
       telephone.enable();               
     }
     else if(typesNotification === 'inconnu'){
